@@ -56,7 +56,6 @@ fun Application.configureRouting() {
                         "Snake went out of bounds or made an invalid move."
                     )
                 }
-                call.respond(HttpStatusCode.OK, endGameState)
             } catch(e: FruitNotFoundException){
                 call.respond(HttpStatusCode.NotFound, e.message.toString())
             } catch (e: InvalidMovementException) {

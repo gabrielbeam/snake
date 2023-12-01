@@ -115,7 +115,7 @@ class ApplicationTest {
     }
 
     @Test
-    fun `405`() = testApplication {
+    fun `returns 418 error code for 180-degree turn `() = testApplication {
 
         application {
             configureRouting()
@@ -126,14 +126,14 @@ class ApplicationTest {
             }
         }
         val endGameState = anyEndGameState().copy(
-            width = 20,
-            height = 20,
-            fruit = Fruit(10, 10),
-            snake = Snake(10, 10, 1, 0),
+            width = 5,
+            height = 5,
+            fruit = Fruit(2, 2),
+            snake = Snake(2, 2, 1, 0),
             ticks = listOf(
-                Movement(velX=0, velY=1),
                 Movement(velX=-1, velY=0),
                 Movement(velX=1, velY=0),
+                Movement(velX=-1, velY=0),
             )
         )
 
@@ -141,8 +141,7 @@ class ApplicationTest {
             contentType(ContentType.Application.Json)
             setBody(endGameState)
         }
-        assertEquals(HttpStatusCode.OK, response.status)
-        assertEquals(endGameState.gameId, response.bodyAsText().split("gameId")[1].split(":\"")[1].split("\"")[0])
-        assertEquals(endGameState.score+1, response.bodyAsText().split("score")[1].split(":")[1].split(",")[0].toInt())
+        assertEquals(HttpStatusCode(418, "I'm a tea pot"), response.status)
+        assertEquals(response.bodyAsText(), "Snake went out of bounds or made an invalid move.")
     }
 }
